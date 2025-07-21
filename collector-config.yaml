@@ -8,6 +8,12 @@ receivers:
 
 processors:
   batch:
+    timeout: 5s
+    send_batch_size: 1000
+  memory_limiter:
+    check_interval: 1s
+    limit_mib: 4000
+    spike_limit_mib: 800
 
 
 exporters:
@@ -31,14 +37,13 @@ service:
   pipelines:
     traces:
       receivers: [otlp]
-      processors: [batch]
-      exporters: [zipkin,debug]
-
+      processors: [memory_limiter, batch]
+      exporters: [zipkin]
     metrics:
       receivers: [otlp]
+      processors: [memory_limiter, batch]
       exporters: [prometheus]
-
     logs:
       receivers: [otlp]
-      processors: [batch]
+      processors: [memory_limiter, batch]
       exporters: [elasticsearch]

@@ -1,0 +1,26 @@
+global:
+  resolve_timeout: 1m
+
+route:
+  receiver: telegram
+  group_wait: 10s
+  group_interval: 30s
+  repeat_interval: 1h
+
+receivers:
+  - name: telegram
+    telegram_configs:
+      - bot_token: "5300827301:AAEaytUiaPBPQw2SH5n2dI0HDmsxZrVqm9s"
+        chat_id: 1735812563
+        parse_mode: "Markdown"
+        message: |
+          {{ if eq .Status "firing" }}
+          *🔥 ALERT:* {{ .CommonLabels.alertname }}
+          *Status:* 🚨 {{ .Status | toUpper }}
+          *Description:* {{ .CommonAnnotations.description }}
+          *Time:* {{ .StartsAt }}
+          {{ else }}
+          *✅ RESOLVED:* {{ .CommonLabels.alertname }}
+          *Status:* ✅ {{ .Status | toUpper }}
+          *Resolved At:* {{ .EndsAt }}
+          {{ end }}

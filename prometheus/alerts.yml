@@ -1,0 +1,11 @@
+groups:
+  - name: http-5xx-alerts
+    rules:
+      - alert: HighHttp5xxErrorRate
+        expr: rate(http_server_request_duration_seconds_bucket{http_response_status_code=~"5.."}[30s]) > 0
+        for: 0s
+        labels:
+          severity: critical
+        annotations:
+          summary: "HTTP 5xx error detected in {{ $labels.job }}"
+          description: "At least one 5xx response was returned by {{ $labels.job }} in the last 30 seconds."
