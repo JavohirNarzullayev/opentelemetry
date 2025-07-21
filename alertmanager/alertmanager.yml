@@ -17,10 +17,12 @@ receivers:
           {{ if eq .Status "firing" }}
           *🔥 ALERT:* {{ .CommonLabels.alertname }}
           *Status:* 🚨 {{ .Status | toUpper }}
+          *Summary:* {{ .CommonAnnotations.summary }}
           *Description:* {{ .CommonAnnotations.description }}
           *Time:* {{ .StartsAt }}
           {{ else }}
           *✅ RESOLVED:* {{ .CommonLabels.alertname }}
           *Status:* ✅ {{ .Status | toUpper }}
+          *Summary:* {{ .CommonAnnotations.summary }}
           *Resolved At:* {{ .EndsAt }}
           {{ end }}
